@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登入 | AI Code Path</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="bg-slate-50">
+
+    <header class="bg-teal-600 shadow-md">
+        <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <a class="flex items-center gap-2" href="/">
+                <i class="fa-solid fa-robot text-white text-xl"></i>
+                <span class="text-white text-lg font-bold">AI Code Path</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div class="mx-auto max-w-lg">
+            <h1 class="text-center text-2xl font-bold text-teal-600 sm:text-3xl">登入您的帳戶</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="my-4">
+                {% for category, message in messages %}
+                <div class="rounded-md bg-red-100 p-3 text-sm text-red-700" role="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('login') }}" method="post"
+                class="mt-8 mb-0 space-y-4 rounded-lg p-8 shadow-lg bg-white">
+                <div>
+                    <label for="username" class="text-sm font-medium">使用者名稱</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="username" name="username"
+                            class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="請輸入您的帳號"
+                            required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="text-sm font-medium">密碼</label>
+                    <div class="relative mt-1">
+                        <input type="password" id="password" name="password"
+                            class="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm" placeholder="請輸入您的密碼"
+                            required>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-teal-700">
+                    登入
+                </button>
+
+                <div class="text-center text-sm text-gray-500">
+                    或
+                </div>
+
+                <a href="{{ url_for('google.login') }}"
+                    class="block w-full rounded-lg bg-white px-5 py-3 text-sm font-medium text-gray-700 border border-gray-300 transition hover:bg-gray-50 text-center">
+                    使用 Google 登入
+                </a>
+
+                <p class="text-center text-sm text-gray-500">
+                    還沒有帳戶嗎？
+                    <a class="underline" href="{{ url_for('register') }}">點此註冊</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

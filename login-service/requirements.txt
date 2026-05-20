@@ -1,0 +1,6 @@
+Flask
+psycopg2-binary
+Flask-Dance
+python-dotenv
+Werkzeug
+requests

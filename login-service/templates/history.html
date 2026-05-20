@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>歷史紀錄 | AI Code Path</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="bg-slate-50">
+
+    <header class="bg-teal-600 shadow-md">
+        <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <a class="flex items-center gap-2" href="/">
+                <i class="fa-solid fa-robot text-white text-xl"></i>
+                <span class="text-white text-lg font-bold">AI Code Path</span>
+            </a>
+
+            <div id="user-status-container" class="flex items-center gap-2">
+                <a href="/login"
+                    class="flex items-center gap-2 rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>登入 / 註冊</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+                諮詢歷史紀錄
+            </h1>
+        </div>
+
+        <div class="mx-auto mt-12 max-w-4xl">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                <div class="rounded-md bg-yellow-100 p-3 text-sm text-yellow-800" role="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% if histories %}
+            <div class="history-list">
+                {% for history in histories %}
+                <a href="{{ url_for('load_history_to_chat', history_id=history.history_id) }}" class="history-item">
+                    <div class="summary">{{ history.summary }}</div>
+                    <div class="timestamp">{{ history.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                </a>
+                {% endfor %}
+            </div>
+
+            {% if total_pages > 1 %}
+            <nav class="pagination">
+                {% if current_page > 1 %}
+                <a href="{{ url_for('history', page=current_page - 1) }}">&laquo; 上一頁</a>
+                {% else %}
+                <span class="disabled">&laquo; 上一頁</span>
+                {% endif %}
+                <span>頁數 {{ current_page }} / {{ total_pages }}</span>
+                {% if current_page < total_pages %} <a href="{{ url_for('history', page=current_page + 1) }}">下一頁
+                    &raquo;</a>
+                    {% else %}
+                    <span class="disabled">下一頁 &raquo;</span>
+                    {% endif %}
+            </nav>
+            {% endif %}
+            {% else %}
+            <p class="text-center text-gray-600 mt-8">目前沒有任何歷史紀錄。</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // 使用 async 函式來非同步地獲取並更新使用者狀態
+        async function updateUserStatus() {
+            const userStatusContainer = document.getElementById('user-status-container');
+
+            try {
+                const response = await fetch('/api/status');
+                if (!response.ok) {
+                    console.error('無法獲取登入狀態:', response.status);
+                    // 如果API出錯，自動導向到登入頁，因為歷史紀錄頁必須登入
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const userData = await response.json();
+
+                if (userData.logged_in && userData.username) {
+                    // 如果後端回報為「已登入」
+                    userStatusContainer.innerHTML = `
+                        <a href="/history" class="flex items-center gap-2 rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>檢視歷史紀錄</span>
+                        </a>
+                        <span class="flex items-center gap-2 rounded-md bg-white/20 px-4 py-2 text-sm font-bold text-white">
+                            <i class="fa-solid fa-user-circle"></i>
+                            <span>${userData.username}</span>
+                        </span>
+                        <a href="/logout" class="flex items-center gap-2 rounded-md bg-red-500/80 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>登出</span>
+                        </a>
+                    `;
+                } else {
+                    // 如果後端回報為「未登入」，則強制跳轉到登入頁面
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('更新使用者狀態時發生錯誤:', error);
+                window.location.href = '/login';
+            }
+        }
+        // 當頁面載入完成後，立刻執行狀態更新函式
+        updateUserStatus();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 職涯顧問</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-dashboard-container">
+        <!-- 頁首 -->
+        <div class="dashboard-header">
+            <h1>AI 職涯顧問</h1>
+            <div class="header-nav">
+                <span>歡迎您，{{ username }}！</span>
+                <a href="{{ url_for('history') }}" class="btn btn-secondary">查看歷史紀錄</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">登出</a>
+            </div>
+        </div>
+
+        <!-- 主要內容區 -->
+        <div class="dashboard-main-content">
+            <!-- 左側：職缺列表 (示意) -->
+            <div class="job-listings-panel">
+                <h2>推薦職缺</h2>
+                <div class="job-card">
+                    <h4>後端工程師 (Python/Django)</h4>
+                    <p>熟悉 RESTful API 設計，具備雲端服務經驗。</p>
+                    <span class="company-tag">科技巨頭 A</span>
+                </div>
+                <div class="job-card">
+                    <h4>資料工程師 (Spark/Airflow)</h4>
+                    <p>負責 ETL 流程建置與大數據平台維護。</p>
+                    <span class="company-tag">新創公司 B</span>
+                </div>
+                <div class="job-card">
+                    <h4>機器學習工程師</h4>
+                    <p>開發與部署機器學習模型，熟悉 PyTorch。</p>
+                    <span class="company-tag">金融科技 C</span>
+                </div>
+            </div>
+
+            <!-- 右側：AI 對話框 (示意) -->
+            <div class="chat-panel">
+                <h2>開始對話</h2>
+                <div class="chat-window">
+                    <div class="chat-message assistant">
+                        <div class="message-bubble">您好！今天想了解哪方面的職涯資訊呢？</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" placeholder="在這裡輸入您的問題...">
+                    <button class="btn btn-primary">傳送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

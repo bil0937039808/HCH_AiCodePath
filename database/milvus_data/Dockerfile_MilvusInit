@@ -1,0 +1,7 @@
+# Dockerfile_MilvusInit
+FROM python:3.10-slim
+
+# 安裝必要套件
+RUN pip install --no-cache-dir pandas pymilvus
+
+

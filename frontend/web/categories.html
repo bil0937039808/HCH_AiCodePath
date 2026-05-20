@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>職涯類別 | AI Code Path</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="bg-slate-50">
+
+  <header class="bg-teal-600 shadow-md">
+    <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <a class="flex items-center gap-2" href="./index.html">
+        <i class="fa-solid fa-robot text-white text-xl"></i>
+        <span class="text-white text-lg font-bold">AI Code Path</span>
+      </a>
+
+      <div id="user-status-container" class="flex items-center gap-2">
+        <a href="/login"
+          class="flex items-center gap-2 rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>登入 / 註冊</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="relative mb-6">
+      <label for="searchInput" class="sr-only"> 搜尋職涯 </label>
+      <input type="text" id="searchInput" placeholder="搜尋職涯名稱，如：前端、資料工程師..."
+        class="w-full rounded-md border-gray-200 p-4 pe-12 text-sm shadow-sm" />
+    </div>
+
+    <section id="catGrid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const CAREER_LIST = ['AI 工程師', '資料工程師', '資料科學家', '機器學習工程師', '前端工程師', '後端工程師', '全端工程師', '數據分析師', '商業分析師', '雲端架構師', 'DevOps 工程師', 'SRE 工程師', '網路安全工程師', '資安分析師', 'Mobile 工程師（iOS/Android）', '產品經理（PM）', 'QA/測試工程師'];
+    const iconMap = { 'AI': 'fa-brain', '資料': 'fa-database', '學習': 'fa-robot', '前端': 'fa-code', '後端': 'fa-server', '全端': 'fa-layer-group', '雲端': 'fa-cloud', 'DevOps': 'fa-gears', 'SRE': 'fa-screwdriver-wrench', '安全': 'fa-shield-halved', 'Mobile': 'fa-mobile-screen', '產品': 'fa-diagram-project', 'QA': 'fa-vial', '商業': 'fa-chart-line' };
+
+    function pickIcon(name) {
+      for (const k of Object.keys(iconMap)) { if (name.includes(k)) return iconMap[k]; }
+      return 'fa-briefcase';
+    }
+
+    const grid = document.getElementById('catGrid');
+    const input = document.getElementById('searchInput');
+
+    function render(list) {
+      if (!list.length) {
+        grid.innerHTML = `<p class="text-gray-500 md:col-span-2 lg:col-span-3">找不到符合條件的職涯類別。</p>`;
+        return;
+      }
+      grid.innerHTML = list.map(name => `
+        <a href="./job-analysis.html?category=${encodeURIComponent(name)}" class="block rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition hover:border-gray-300 hover:shadow-md" data-name="${name}">
+          <span class="inline-block rounded-lg bg-teal-100 p-3 text-teal-600">
+            <i class="fa-solid ${pickIcon(name)} fa-fw"></i>
+          </span>
+          <h2 class="mt-2 text-lg font-bold text-gray-900">${name}</h2>
+          <p class="mt-1 text-sm text-gray-600">點擊查看此職涯的技能分析 Dashboard</p>
+        </a>
+      `).join('');
+    }
+
+    render(CAREER_LIST);
+
+    grid.addEventListener('click', (e) => {
+      const card = e.target.closest('a[data-name]');
+      if (card) {
+        // 阻止默認跳轉行為，改為手動跳轉
+        e.preventDefault();
+        window.location.href = card.href;
+      }
+    });
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) return render(CAREER_LIST);
+      const filtered = CAREER_LIST.filter(n => n.toLowerCase().includes(q));
+      render(filtered);
+    });
+  </script>
+  <script>
+    // 使用 async 函式來非同步地獲取並更新使用者狀態
+    async function updateUserStatus() {
+      const userStatusContainer = document.getElementById('user-status-container');
+
+      try {
+        // 向我們在 Flask 中新增的 /api/status 端點發送請求
+        const response = await fetch('/api/status');
+
+        if (!response.ok) {
+          // 如果 API 請求失敗，則不做任何事，維持預設的登入按鈕
+          console.error('無法獲取登入狀態:', response.status);
+          return;
+        }
+
+        const userData = await response.json();
+
+        if (userData.logged_in && userData.username) {
+          // 如果後端回報為「已登入」
+          userStatusContainer.innerHTML = `
+                      <a href="/history" class="flex items-center gap-2 rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+                          <i class="fa-solid fa-clock-rotate-left"></i>
+                          <span>檢視歷史紀錄</span>
+                      </a>
+                      <span class="flex items-center gap-2 rounded-md bg-white/20 px-4 py-2 text-sm font-bold text-white">
+                          <i class="fa-solid fa-user-circle"></i>
+                          <span>${userData.username}</span>
+                      </span>
+                      <a href="/logout" class="flex items-center gap-2 rounded-md bg-red-500/80 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-500">
+                          <i class="fa-solid fa-right-from-bracket"></i>
+                          <span>登出</span>
+                      </a>
+                  `;
+        }
+        // 如果後端回報為「未登入」，則不做任何事，維持 HTML 預設的「登入 / 註冊」按鈕
+
+      } catch (error) {
+        console.error('更新使用者狀態時發生錯誤:', error);
+      }
+    }
+
+    // 當頁面載入完成後，執行狀態更新函式
+    document.addEventListener('DOMContentLoaded', updateUserStatus);
+  </script>
+</body>
+
+</html>
