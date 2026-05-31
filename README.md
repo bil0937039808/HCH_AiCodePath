@@ -6,14 +6,14 @@
 ![Docker](https://img.shields.io/badge/Docker-🐳-blue?style=for-the-badge&logo=docker)
 ![Milvus](https://img.shields.io/badge/Milvus-Vector_DB-orange?style=for-the-badge)
 
-## 📌 專案概述 (Project Overview)
+## 專案概述 (Project Overview)
 **AiCodePath** 是一個專為求職轉職者設計的 AI 智慧媒合與學習規劃平台。針對轉職者在投入陌生領域時面臨的「技能落差」與「缺乏具體學習路徑」之痛點，本專案將 **104 人力銀行** 的職缺資訊與 **Coursera** 線上課程進行深度整合。透過大語言模型 (LLM) 與檢索增強生成 (RAG) 技術，使用者能以自然語言進行對話，系統則會自動檢索精準職缺、分析技能缺口，並客製化編排個人化的課程學習路徑。
 
-> 💡 **Core Highlight**：本儲存庫主要展示系統的**核心後端架構（Backend Architecture）**與 **AI/RAG 研發成果**。全案本人開發 70% 的 Python 程式碼，實作了非同步任務佇列、即時雙向通訊、多服務容器化部署及 RAG 混合檢索 Pipeline，表達具備解決複雜併發與資料流阻塞的後端工程能力。
+>  **Core Highlight**：本儲存庫主要展示系統的**核心後端架構（Backend Architecture）**與 **AI/RAG 研發成果**。全案本人開發 70% 的 Python 程式碼，實作了非同步任務佇列、即時雙向通訊、多服務容器化部署及 RAG 混合檢索 Pipeline，表達具備解決複雜併發與資料流阻塞的後端工程能力。
 
 ---
 
-## 🛠️ 技術棧 (Tech Stack)
+##  技術棧 (Tech Stack)
 * **後端核心**: Python, FastAPI, Object-Oriented Programming (OOP, 繼承/多型/Singleton)
 * **大語言模型與 RAG**: OpenAI API (GPT 系列), Milvus (向量資料庫), Pydantic (結構化輸出), Prompt Engineering
 * **資料儲存與快取**: PostgreSQL (關聯式資料庫), Redis (快取 & 任務佇列)
@@ -22,7 +22,7 @@
 
 ---
 
-## 🏗️ 核心架構與工程設計 (Engineering Highlights)
+##  核心架構與工程設計 (Engineering Highlights)
 
 ### 1. RAG 混合檢索設計 (Hybrid Search Pipeline)
 為了解決傳統純向量搜尋在處理特定硬性條件（如薪資、工作地點）時的語意模糊，以及傳統關鍵字搜尋缺乏語意理解的缺點，本專案設計了 **Hybrid Search** 機制：
@@ -52,7 +52,7 @@
 
 ---
 
-## 🔄 技術演進與反思 (Engineering Evolution)
+##  技術演進與反思 (Engineering Evolution)
 在專案研發的早期階段，團隊曾嘗試完全本地化運算（採用 Hugging Face 開源模型與 FAISS 向量庫）。然而，在實際工程測試後發現：
 1. 本地硬體資源受限，導致大型模型推理與回應時間 (Latency) 過長。
 2. 純向量庫在缺乏關聯式資料庫（如 PostgreSQL）的複合硬性條件篩選時，整體招回表現與彈性甚至不如傳統關鍵字搜尋，缺乏商用優勢。
@@ -61,7 +61,7 @@
 
 ---
 
-## 👥 個人核心貢獻 (Individual Contributions)
+##  個人核心貢獻 (Individual Contributions)
 全案由 7 人團隊協作開發，本人作為**後端開發/架構師**，獨立撰寫了 **2,500+ 行 Python 程式碼**，具體貢獻如下：
 1. **後端架構設計**: 獨立設計並實作 AI Backend 的星狀相依架構，利用 FastAPI 處理非同步併發 I/O。
 2. **RAG 管道架構**: 建立 Milvus 向量庫與 PostgreSQL 的混合檢索 Pipeline，實作雙資料庫主鍵交集篩選邏輯。
